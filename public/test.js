@@ -9,7 +9,7 @@ const ActivityUploadApp = () => {
     assetId: '',
     identity: '',
     activitySource: 'web',
-    //  accessToken: ''
+     accessToken: ''
   });
   const [csvData, setCsvData] = useState(null);
   const [apiCurl, setApiCurl] = useState('');
@@ -110,7 +110,7 @@ const ActivityUploadApp = () => {
     const requestBody = generateRequestBody();
     const curl = `curl --location --request POST '${formData.endpoint}' \\
 --header 'Authorization: Bearer ${formData.apiKey}' \\
-
+--header 'Access-Token: ${formData.accessToken}' \\
 --header 'Content-Type: application/json' \\
 --data '${JSON.stringify(requestBody, null, 2)}'`;
 
@@ -118,34 +118,9 @@ const ActivityUploadApp = () => {
     setShowConfirmation(true);
   };
 
-  const handleSubmit = async () => {
-    const requestBody = generateRequestBody();
-  
-    try {
-      const response = await fetch(formData.endpoint, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${formData.apiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Response:', data);
-        alert('Data submitted successfully!');
-      } else {
-        const error = await response.text();
-        console.error('Error:', error);
-        alert(`Error: ${response.statusText}`);
-      }
-    } catch (error) {
-      console.error('Network error:', error);
-      alert('An error occurred while submitting the data.');
-    }
+  const handleSubmit = () => {
+    console.log('Submitting with body:', generateRequestBody());
   };
-  
 
   return (
     <div style={{ padding: '16px', maxWidth: '800px', margin: '0 auto' }}>
@@ -169,7 +144,15 @@ const ActivityUploadApp = () => {
             fullWidth
             margin="normal"
           />
-        
+          <TextField
+            label="Access Token"
+            name="accessToken"
+            type="password"
+            value={formData.accessToken}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
           <TextField
             label="Asset ID"
             name="assetId"
